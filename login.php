@@ -1,17 +1,27 @@
 <?php
 session_start();
-$usrname = $_POST["username"];
+$username = $_POST["username"];
 $password = $_POST["password"];
+$conn = mysqli_connect("localhost", "root", "", "exam");
 
-$conn = mysqli_connect("localhost", "root", "", "DatabaseExam");
-
-$sql = "SELECT id, name FROM users WHERE username = '$usrname' AND password = '$password'";
-echo $sql . "<br>";
+$sql = "SELECT id, name, password FROM users WHERE username = '$username'";
+//echo $sql . "<br>";
 $result = $conn->query($sql);
-$row = $result->fetch_assoc()
-var_dump($row);
-$id = $row["id"];
-$name = $row["name"];
-$_SESSION['userID'] = $id;
-$_SESSION["userName"] = $name;
-header("Location: index.php");//redirects back
+$row = $result->fetch_assoc();
+
+$hashPw = $row["password"];
+echo $hashPw;
+
+if(password_verify($password, $hashPw)) {
+
+	//var_dump($row);
+	$id = $row["id"];
+	$name = $row["name"];
+	$_SESSION['userID'] = $id;
+	$_SESSION["username"] = $name;
+	header("Location: index.php");//redirects back
+}
+
+else {
+	echo "<p style='color:red'>Wrong Username/Password</p>";
+}

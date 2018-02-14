@@ -2,10 +2,10 @@
 session_start();
 $loggedIn = isset($_SESSION['userID']);
 if($loggedIn) {
-	id = $SESSION['userID'];
-	$conn = mysqli_connect("localhost", "root", "", "databaseexam");
-	$sql = SELECT id, imageURL FROM images WHERE owner = id;
-	$imageresult = $conn->query($sql);
+	$id = $_SESSION['userID'];
+	$conn = mysqli_connect("localhost", "root", "", "exam");
+	$sql = "SELECT id, imageURL FROM images WHERE owner = '$id'";
+	$imgresult = $conn->query($sql);
 }
 ?>
 <!DOCTYPE html>
@@ -13,6 +13,7 @@ if($loggedIn) {
 <head>
 	<title>MercBook</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="javascript.js"></script>
 	<style type="text/css">
 		.grid {
 			display: grid;
@@ -62,7 +63,7 @@ if($loggedIn) {
 		}
 
 		.myImage {
-			max-width: 48%;
+			width: 48%;
 			margin: 1%;
 		}
 
@@ -94,13 +95,15 @@ if($loggedIn) {
 				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat quis purus ut bibendum. Mauris sit amet lacinia arcu. Vivamus fringilla magna id augue luctus interdum. 
 
 			<?php 
-			if$imageresult) {
-				echo "<h2>Dine Billeder</h2>";
-				while($row = $imageresult->fetch_assoc()) {
-					$url = $row["imageUrl"];
-					echo "<img class = 'myImage' src='$url'>";
-				}
-			} 
+				if($loggedIn) {
+					echo "<h2>Dine Billeder</h2>";
+					while($row = $imgresult->fetch_assoc()) {
+						$url = $row["imageURL"];
+						echo "     <a href=\"deleteImgs.php?id=".$row['id']."\">Delete</a><br>";
+						echo "<img class = 'myImage' src='$url'><br>";
+					}
+				
+			}
 			?>
 			<div class="myTextArea"><p>
 				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat quis purus ut bibendum. Mauris sit amet lacinia arcu. Vivamus fringilla magna id augue luctus interdum. Aliquam urna dui, efficitur at imperdiet sed, ultricies eu tellus. Pellentesque iaculis sagittis nisi id ultrices. Phasellus pharetra diam ac ex feugiat dapibus eget a diam. Fusce ullamcorper nunc quis massa ornare dapibus. Nunc efficitur nunc ut consectetur condimentum. Maecenas faucibus quis justo nec venenatis. Donec at placerat magna. Donec a lobortis eros. Aliquam erat volutpat. Proin gravida orci ut semper aliquet. Donec vitae purus commodo, accumsan purus sed, congue neque. Nullam egestas, augue sed euismod mollis, leo risus elementum nisi, non venenatis felis justo ac libero.

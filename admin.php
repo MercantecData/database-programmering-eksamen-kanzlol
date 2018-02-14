@@ -1,15 +1,19 @@
 <title>Admin Page</title><?php
 
 if(isset($_POST["submit"])) {
-	$conn = mysqli_connect("localhost", "root", "", "DatabaseExam");
+	$conn = mysqli_connect("localhost", "root", "", "exam");
 	$username = $_POST["username"];
 	$password = $_POST["password"];
-	$sql = "SELECT id FROM adminuser WHERE username = '$username' AND password = '$password'";
+	$sql = "SELECT id, password FROM adminusers WHERE username = '$username'";
 	$result = $conn->query($sql);
-	if($result->num_rows > 0) {
+	$row = $result->fetch_assoc();
+	$hashPw = $row["password"];
+	
+	if(password_verify($password, $hashPw)) {
 		header("Location: userlist.php");
 		exit;
-	} else {
+	}
+	else {
 		echo "<p style='color:red'>Wrong Username/Password</p>";
 	}
 }
